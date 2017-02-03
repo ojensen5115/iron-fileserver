@@ -12,11 +12,15 @@ use mount::Mount;
 use staticfile::Static;
 
 use std::env;
+use std::ffi::OsStr;
 use std::fs::read_dir;
 use std::path::Path;
 use std::path::PathBuf;
 
+
 use url::percent_encoding::percent_decode;
+
+static VIDEO_EXTENSIONS: &'static [&'static str] = &["avi", "flv", "wmv", "mov", "mp4", "webm", "mkv"];
 
 fn main() {
 
@@ -56,7 +60,13 @@ fn main() {
             let web_path = &path_str[basepath_len..];
             let link = match path.is_dir() {
                 true => format!("<a href=\"/ls/{}/\">{}</a>", web_path, filename_str),
-                false => format!("<a href=\"/dl/{0}\">{1}</a> -- (<a href=\"/st/{0}\">stream</a>)", web_path, filename_str)
+                false => {
+                    let mut l = format!("<a href=\"/dl/{0}\">{1}</a>", web_path, filename_str);
+                    if VIDEO_EXTENSIONS.contains(&&*(path.extension().unwrap_or(OsStr::new("")).to_str().unwrap().to_lowercase())) {
+                        l = format!("{} -- (<a href=\"/st/{}\">stream</a>)", l, web_path)
+                    }
+                    l
+                }
             };
 
             html = format!("{}<li>{}</li>", html, link);
