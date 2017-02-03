@@ -1,0 +1,15 @@
+[package]
+name = "fileserver"
+version = "0.1.0"
+authors = ["Oliver Jensen <ojensen5115@gmail.com>"]
+
+[dependencies.iron]
+version = "0.4.0"
+
+[dependencies.url]
+git = "https://github.com/servo/rust-url"
+
+[dependencies]
+mount = "*"
+staticfile = "*"
+lazy_static = "*"
